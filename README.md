@@ -91,7 +91,7 @@ tail -f output/pluto.0.log
 
 # Generating Figures
 
-The `fig_dir` directory contains all the scripts needed to reproduce Figures 7-12 from the manuscript. Each figure has its dedicated script. You will need to update each script with the correct path to your PLUTO CME results. 
+The `fig_dir` directory contains all the scripts needed to reproduce Figures 7-12 from the manuscript. Each figure has its dedicated script. You will need to update each script with the correct path to your PLUTO CME results. The `results` subdirectory includes a single file `orbiter.csv` with the Solar Orbiter data needed for Figure 12 (see `driver_fig12.py`)
 
 
 
