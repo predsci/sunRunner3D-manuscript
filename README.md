@@ -4,16 +4,14 @@ Repository containing all codes, scripts, and 2D boundary condition files needed
 
 # Cloning the Repository
 
-To clone this repository use
+To clone this repository use:
 
 ```
 git clone https://github.com/predsci/suRunner3D-manuscript
 ``` 
 # Installing PLUTO
 
-The sunRunner3D tool is based on the PLUTO code. 
-
-Hence PLUTO must first be downloaded and installed from here:
+The sunRunner3D tool is based on the PLUTO code. Hence PLUTO must first be downloaded and installed from here:
 
 http://plutocode.ph.unito.it/
 
@@ -28,7 +26,7 @@ We use the [pysunrunner](https://github.com/predsci/pysunrunner) package to visu
 git clone https://github.com/predsci/pysunrunner
 pip install -e pysunrunner
 ```
-We recommend that you setup a conda or miniconda environment for the package.
+We recommend that you set up a conda or miniconda environment for the package.
 
 # Heliospheric relaxation
 
@@ -37,14 +35,15 @@ You will start by relaxing the heliospheric domain using the boundary conditions
 ```
 cd relax_dir
 ```
-The `init.c` and `userdef_output.c` in this directory are the only two PLUTO routines we have modified. Together with the `definitions.h` and `pluto.ini` files they define your run configuration.
-Although this directory includes the `Makefile` we use, it is safer to generate a `Makefile` that is specific to your computer architecture. This can be done by invoking the  PLUTO `setup.py` script
+The `init.c` and `userdef_output.c` in this directory are the only two PLUTO routines we have modified. Together with the `definitions.h` and `pluto.ini` files they define your run configuration. The `2D` subdirectory includes the boundary files loaded by `init.c` at each timestep.
+Although the `relax_dir` directory includes the `Makefile` we use, it is safer to generate a `Makefile` that is specific to your computer architecture. As explained in Section 1.3 of the PLUTO manual this can be done by invoking the  PLUTO `setup.py` script:
 ```
 python $PLUTO_DIR/setup.py
 ```
-as explained in Section 1.3 of the PLUTO manual. The `2D` subdirectory includes the boundary files loaded at each timestep by `init.c`.  Once the Makefile is created PLUTO can be compiled:
+Once the Makefile is created PLUTO can be compiled:
 ```
 make
+make clean
 ```
 We recommend compiling PLUTO with MPI support and running it on multiple threads, e.g.,
 ```
@@ -57,7 +56,7 @@ If you change the name of the `output` directory, be sure to update the output_d
 To track the progression of the relaxation you can use:
 
 ```
-tail output/pluto.0.log
+tail -f output/pluto.0.log
 ```
 
 # CME Run
@@ -66,12 +65,13 @@ Start by navigating to the `cme_dir` directory
 ```
 cd cme_dir
 ```
-here too you see the two PLUTO files we have modified: `init.c` and `userdef_output.c'. Note that the `init.c` in this directory includes the CME and is not the same as the one in the `relax_dir` 
-You will need to create your platform-specific Makefile,  compile PLUTO, and copy the results of the relaxation to the current directory
+here too you see the two PLUTO files we have modified: `init.c` and `userdef_output.c`. Note that the `init.c` in this directory includes the CME and is not the same as the one in the `relax_dir` 
+You will need to create your platform-specific Makefile,  compile PLUTO, and copy the results of the relaxation to the current directory:
 
 ```
 python $PLUTO_DIR/setup.py
 make
+make clean
 cp -r ../relax_dir/output .
 ```
 The output directory will include all the log files from the relaxation which are not needed and can be deleted:
@@ -84,9 +84,9 @@ The CME run is a continuation of the relaxation phase. You will specify this in 
 ```
 mpirun -np 32 ./pluto -no-x3par -restart 1 1>log 2>err &
 ```
-Here too, all your results will be generated in the `output` directory and you can track the CME run progression using:
+Here too, all your results will be generated in the `output` subdirectory and you can track the CME run progression using:
 ```
-tail output/pluto.0.log
+tail -f output/pluto.0.log
 ```
 
 # Generating Figures
