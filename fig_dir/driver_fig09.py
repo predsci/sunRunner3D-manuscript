@@ -50,6 +50,14 @@ time = np.array(time, dtype=np.float32)
 time_fac_pluto = 1.49597871e+08/3600 #time_unit_str = '(hours)'; %1AU/1km/s
 time_h = time * time_fac_pluto
 
+# conversion factor from PLUTO magnetic field units to nT
+
+b_fac_pluto = 0.0458505
+
+# units are [km/s], N[cm^-3], and will not be converted 
+
+v_fac_pluto, rho_fac_pluto = 1.0, 1.0
+
 # set the zero of time to the end of the relaxation == CME initiation
 time_h = time_h - time_h[1]
 
@@ -72,6 +80,8 @@ subplot_kw = {'projection': "polar"}
 cmap_list = ['rainbow', 'coolwarm', 'rainbow']
 
 title_list = ['(a) Radial Velocity', '(b) Scaled Radial Magnetic Field', '(c) Scaled Density']
+
+units_list = [v_fac_pluto, b_fac_pluto, rho_fac_pluto]
 
 zmin_list = [200, -100, 0]
 
@@ -113,7 +123,7 @@ for ii, var_name in enumerate(var_list):
 
     axs[ii] = pviz.plot_phi_cut(D=D, var_name = var_name,
         phi_cut = phi_cut, ax=axs[ii],cmap = cmap_list[ii], title = title_list[ii],
-        r_scale = r_scale, zmin = zmin_list[ii], zmax = zmax_list[ii])
+        r_scale = r_scale, zmin = zmin_list[ii], zmax = zmax_list[ii], conversion_units = units_list[ii])
 
     # Start adding radial rays
     cmap = plt.colormaps[cmap_list[ii]]

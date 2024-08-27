@@ -38,12 +38,12 @@ R_sun_to_au =  0.004650467260962157
 # for panel (c): r_val = 1.0 
 
 ## set r_val and panel name 
-r_val = 31.0 * R_sun_to_au 
+r_val = 1.0 * R_sun_to_au 
 
 panel_name = 'a' #'b' 'c'
 
 # set figure filename
-file_name = png_dir +'figure14_'+panel_name+'.png'
+file_name = png_dir +'figure10'+panel_name+'_'+myrun+'.png'
 
 
 # For latitude: equatorial location
