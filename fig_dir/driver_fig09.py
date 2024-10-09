@@ -6,6 +6,7 @@ import pysunrunner.io as io
 import pysunrunner.pviz as pviz
 
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 
 #run name
@@ -108,6 +109,31 @@ indices = np.linspace(0, 1, n_slice)
 
 # End of radial rays section
 
+# read space craft location file 
+
+spacecraft_file = 'results/Solar-MACH_2022-09-06_12-00-00.csv'
+df_sc = pd.read_csv(spacecraft_file)
+
+spacecraft_list = df_sc['Spacecraft/Body'].values
+spacecraft_lat  = df_sc['Carrington latitude (°)'].values
+spacecraft_dist = df_sc['Heliocentric distance (AU)'].values
+
+abbreviations = {
+    'STEREO A': 'STA',
+    'Earth': 'Earth',
+    'BepiColombo': 'Bepi',
+    'Parker Solar Probe': 'PSP',
+    'Solar Orbiter': 'SolO'
+}
+
+sc_colors = {
+    'STA': 'red',
+    'Earth': 'green',
+    'Bepi': 'orange',
+    'PSP': 'purple',
+    'SolO': 'dodgerblue' #'cornflowerblue'   
+}
+
 # 
 # 
 # Create a figure and a 1x3 grid of subplots
@@ -133,6 +159,21 @@ for ii, var_name in enumerate(var_list):
         axs[ii].plot([th_slice, th_slice], [np.min(r_coords), np.max(r_coords)], color=colors[jcount], linestyle='-', linewidth=1)
         jcount = jcount + 1
     # End of adding radial rays
+
+    # adding spacecraft locations with markers and labels
+    icount = 0
+    for spacecraft, abbrev in abbreviations.items():
+        sc_t = np.deg2rad(spacecraft_lat[icount])
+        sc_r   = spacecraft_dist[icount]
+        
+        # Plot a marker at the specified (sc_phi, sc_r)
+        axs[ii].plot(sc_t, sc_r, marker = 'o', color = sc_colors[abbrev], markersize=7)  # 'ko' means a black marker (circle)
+
+        # Add text label next to the marker
+        axs[ii].text(sc_t, sc_r, abbrev, fontsize=10, ha='right', va='bottom', color=sc_colors[abbrev])
+
+        icount = icount + 1
+
 plt.tight_layout()
 plt.subplots_adjust(bottom = -0.1)
 
@@ -140,7 +181,7 @@ plt.savefig(file_name, dpi=150)
 print("Saving Plot to: ", file_name)
 
 # to plot to screen uncomment the line below
-#plt.show()
+# plt.show()
 
 
 

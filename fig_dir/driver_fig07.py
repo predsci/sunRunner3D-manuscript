@@ -6,6 +6,7 @@ import pysunrunner.io as io
 import pysunrunner.pviz as pviz
 
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 
 #run name
@@ -102,8 +103,34 @@ for ii in range(0, n_slice):
         i_phi_slice[ii] = i_phi_slice[ii] - len(p_coords)
 
 fi_slice_all = p_coords[i_phi_slice]
+
+
 # End of radial rays code
 
+# read space craft location file 
+
+spacecraft_file = 'results/Solar-MACH_2022-09-06_12-00-00.csv'
+df_sc = pd.read_csv(spacecraft_file)
+
+spacecraft_list = df_sc['Spacecraft/Body'].values
+spacecraft_long = df_sc['Carrington longitude (°)'].values
+spacecraft_dist = df_sc['Heliocentric distance (AU)'].values
+
+abbreviations = {
+    'STEREO A': 'STA',
+    'Earth': 'Earth',
+    'BepiColombo': 'Bepi',
+    'Parker Solar Probe': 'PSP',
+    'Solar Orbiter': 'SolO'
+}
+
+sc_colors = {
+    'STA': 'red',
+    'Earth': 'green',
+    'Bepi': 'orange',
+    'PSP': 'purple',
+    'SolO': 'dodgerblue' #'cornflowerblue'   
+}
 # 
 # Create a figure and a 2x2 grid of subplots
 fig, axs = plt.subplots(2, 2, subplot_kw=subplot_kw, figsize=(10, 10))
@@ -135,6 +162,20 @@ for ii, var_name in enumerate(var_list):
         jcount = jcount + 1
     # End of adding radial rays
 
+    # adding spacecraft locations with markers and labels
+    icount = 0
+    for spacecraft, abbrev in abbreviations.items():
+        sc_phi = np.deg2rad(spacecraft_long[icount])
+        sc_r   = spacecraft_dist[icount]
+        
+        # Plot a marker at the specified (sc_phi, sc_r)
+        axs[ii].plot(sc_phi, sc_r, marker = 'o', color = sc_colors[abbrev], markersize=7)  # 'ko' means a black marker (circle)
+
+        # Add text label next to the marker
+        axs[ii].text(sc_phi, sc_r, abbrev, fontsize=10, ha='right', va='bottom', color=sc_colors[abbrev])
+
+        icount = icount + 1
+
 plt.tight_layout()
 plt.subplots_adjust(bottom = 0)
 file_name = png_dir +'figure07_'+myrun+'.png'
@@ -142,7 +183,7 @@ plt.savefig(file_name, dpi=150)
 print("Saving Plot to: ", file_name)
 
 # to plot to screen uncomment the line below
-#plt.show()
+# plt.show()
 
 
 
