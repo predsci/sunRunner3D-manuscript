@@ -38,7 +38,7 @@ R_sun_to_au =  0.004650467260962157
 # for panel (c): r_val = 1.0 
 
 ## set r_val and panel name 
-r_val = 1.0 * R_sun_to_au 
+r_val = 31.0 * R_sun_to_au # 0.7, 1.0
 
 panel_name = 'a' #'b' 'c'
 
